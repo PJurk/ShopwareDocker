@@ -20,7 +20,8 @@ RUN requirements="libbz2-dev libfreetype6-dev libicu-dev libjpeg62-turbo-dev lib
     opcache \
     pcntl \
     gettext \
-    bz2
+    bz2 \
+    simplexml
 
 RUN pecl channel-update pecl.php.net \
   && pecl install xdebug
@@ -30,6 +31,10 @@ RUN docker-php-ext-enable xdebug \
 
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - \
   && apt-get install -y nodejs 
+
+RUN curl -sSLO https://github.com/mailhog/mhsendmail/releases/download/v0.2.0/mhsendmail_linux_amd64 \
+  && chmod +x mhsendmail_linux_amd64 \
+  && mv mhsendmail_linux_amd64 /usr/local/bin/mhsendmail
 
 RUN curl -sS https://getcomposer.org/installer | \
     php --  --install-dir=/usr/local/bin --filename=composer
@@ -42,3 +47,4 @@ RUN rm -rf "/etc/apache2/sites-available/000-default.conf"
 RUN rm -rf "/etc/apache2/sites-available/default-ssl.conf"
 COPY ./php.ini /usr/local/etc/php/php.ini
 WORKDIR /var/www/html
+COPY /development /var/www/html 

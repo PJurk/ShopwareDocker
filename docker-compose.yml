@@ -14,11 +14,12 @@ services:
         aliases:
           - my_shopware
     volumes:
-      - ./development:/var/www/html
+      - my-shopware:/var/www/html
     ports: 
       - '80:80'
     links: 
         - db
+        - mailhog
 
   db:
     image: mysql:5.7
@@ -53,10 +54,14 @@ services:
 
   mailhog:
     image: mailhog/mailhog
+    ports:
+      - "1025"
+      - "8025:8025"
     networks:
       shopware:
         aliases:
           - mailhog
+    
 
   adminer:
     image: adminer:latest
@@ -74,3 +79,6 @@ services:
     environment:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - discovery.type=single-node
+
+volumes:
+  my-shopware:
