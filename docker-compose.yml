@@ -1,0 +1,76 @@
+version: '3.7'
+
+networks:
+    shopware:
+
+services:
+  app_server:
+    build:
+        context: .
+    container_name: my_shopware
+    image: pjurk/shopware
+    networks:
+      shopware:
+        aliases:
+          - my_shopware
+    volumes:
+      - ./development:/var/www/html
+    ports: 
+      - '80:80'
+    links: 
+        - db
+
+  db:
+    image: mysql:5.7
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: app
+      MYSQL_PASSWORD: app
+      MYSQL_DATABASE: shopware
+    volumes:
+        - ./db:/var/lib/mysql
+    networks:
+      shopware:
+        aliases:
+          - mysql
+
+  cypress:
+    image: cypress/included:4.5.0
+    #tty: true
+    #ipc: host
+    environment:
+      - CYPRESS_baseUrl=http://shopware.test.com:8000
+      - DISPLAY
+    networks:
+      shopware:
+    volumes:
+      - ./development/vendor/shopware/platform/src/Storefront/Resources/app/storefront/test/e2e:/e2e-Storefront
+      - ./development/vendor/shopware/platform/src/Administration/Resources/app/administration/test/e2e:/e2e-Administration
+      # for Cypress to communicate with the X11 server pass this socket file
+      # in addition to any other mapped volumes
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    entrypoint: /bin/bash
+
+  mailhog:
+    image: mailhog/mailhog
+    networks:
+      shopware:
+        aliases:
+          - mailhog
+
+  adminer:
+    image: adminer:latest
+    networks:
+        shopware:
+    links: 
+        - db
+
+  elasticsearch:
+    image: elastic/elasticsearch:7.1.1
+    networks:
+        shopware:
+            aliases:
+                - elasticsearch
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - discovery.type=single-node
