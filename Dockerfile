@@ -47,4 +47,9 @@ RUN rm -rf "/etc/apache2/sites-available/000-default.conf"
 RUN rm -rf "/etc/apache2/sites-available/default-ssl.conf"
 COPY ./php.ini /usr/local/etc/php/php.ini
 WORKDIR /var/www/html
-COPY /development /var/www/html 
+RUN git clone https://github.com/shopware/development.git
+RUN mv development/* /var/www/html
+RUN rm -rf development
+COPY  ./.env.dist /var/www/html/.env.dist 
+COPY  ./.psh.yml.dist /var/www/html/.psh.yml.dist
+COPY  ./.psh.yml.override /var/www/html/.psh.yml.override
