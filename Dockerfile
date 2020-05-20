@@ -59,7 +59,5 @@ COPY  ./.env.dist /var/www/html/.env.dist
 COPY  ./.psh.yml.dist /var/www/html/.psh.yml.dist
 COPY  ./.psh.yml.override /var/www/html/.psh.yml.override
 RUN chmod -R 777 .
-RUN chmod -R 660 config/jwt/public.pem && \
-   chmod -R 660 config/jwt/private.pem 
-   
+
 RUN a2enmod rewrite

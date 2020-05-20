@@ -68,6 +68,8 @@ services:
     image: adminer:latest
     networks:
         shopware:
+    ports:
+      - "8080:8080"
     links: 
         - db
 
