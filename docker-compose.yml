@@ -4,15 +4,15 @@ networks:
     shopware:
 
 services:
-  app_server:
+  app:
     build:
         context: .
-    container_name: my_shopware
+    container_name: my-shopware
     image: pjurk/shopware
     networks:
       shopware:
         aliases:
-          - my_shopware
+          - my-shopware
     volumes:
       - my-shopware:/var/www/html
     ports: 

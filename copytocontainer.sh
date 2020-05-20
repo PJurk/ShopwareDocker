@@ -1,2 +1,2 @@
-docker exec -it my_shopware rm -rf .
-docker cp ./development/. my_shopware:/var/www/html/. /c/development
+docker exec -it my-shopware rm -rf .
+docker cp ./development/. my-shopware:/var/www/html/. /c/development
