@@ -1,25 +1,18 @@
 version: '3.7'
-
-networks:
-    shopware:
-
 services:
   app:
     build:
-        context: .
+        context: ./Docker/Shopware
     container_name: my-shopware
     image: pjurk/shopware
-    networks:
-      shopware:
-        aliases:
-          - my-shopware
     volumes:
-      - my-shopware:/var/www/html
+      - ./development:/var/www/html
     ports: 
       - '80:80'
     links: 
         - db
         - mailhog
+        - elasticsearch
 
   db:
     image: mysql:5.7
@@ -31,10 +24,6 @@ services:
     volumes:
         - ./db:/var/lib/mysql
     command: --innodb_use_native_aio=0
-    networks:
-      shopware:
-        aliases:
-          - mysql
 
   # cypress:
   #   image: cypress/included:4.5.0
@@ -58,16 +47,10 @@ services:
     ports:
       - "1025"
       - "8025:8025"
-    networks:
-      shopware:
-        aliases:
-          - mailhog
     
 
   adminer:
     image: adminer:latest
-    networks:
-        shopware:
     ports:
       - "8080:8080"
     links: 
@@ -75,13 +58,7 @@ services:
 
   elasticsearch:
     image: elastic/elasticsearch:7.1.1
-    networks:
-        shopware:
-            aliases:
-                - elasticsearch
     environment:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
       - discovery.type=single-node
 
-volumes:
-  my-shopware:
