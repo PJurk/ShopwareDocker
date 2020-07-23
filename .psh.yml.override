@@ -1,9 +1,0 @@
-const:
-  APP_ENV: "dev"
-  APP_URL: "http://shopware.test.com"
-  BLUE_GREEN_DEPLOYMENT: "1"
-  DB_HOST: "db"
-  DB_PORT: "3306"
-  DB_NAME: "shopware"
-  DB_USER: "root"
-  DB_PASSWORD: "root"
